@@ -2,6 +2,9 @@
 <html>
 <body style="font-family:courier;">
 <p>Enter your <b>text</b> below, then choose up to <b>three</b> colors:</p>
+<p><i>You must check the box next to the second and third colors if you wish to use those.</i></p>
+<p><i>You may enter hex codes manually in 6-digit format, or choose with the color-picker.</i></p>
+<p><i>The app will defer to manually entered hex first, or the color-picker value if left blank.</i></p>
 <form id="gradientInput" action="/action_page.php" oninput="hex1.value=colorPicker1.value.substring(1,7);hex2.value=colorPicker2.value.substring(1,7);hex3.value=colorPicker3.value.substring(1,7)">
   <input type="text" id="inputtext" name="inputtext" maxlength="50" size="50"><br><br>
   
@@ -26,7 +29,8 @@
 
 <button style="font-family:courier;" onclick="parseInput()">Get Code</button><br><br>
 
-<p>Preview*: <canvas id="previewBox1" width="24" height="24"></canvas>
+<p>Preview*: </p>
+<p><canvas id="previewBox1" width="24" height="24"></canvas>
 <canvas id="previewBox2" width="24" height="24"></canvas></p>
 
 <p>Name Code:</p>
