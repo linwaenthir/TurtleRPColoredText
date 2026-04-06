@@ -53,8 +53,8 @@ function parseInput(){
   else if(using2 && !sameColor){newText=getGradient2(inputtext,hexcolor1,hexcolor2,250);}
   else if(using3 && !sameColor){newText=getGradient2(inputtext,hexcolor1,hexcolor3,250);}
   else {newText=getGradient1(inputtext,hexcolor1);}
-  
-  document.getElementById("gradientResult").innerHTML = newText+"|r";  
+  newText+="|r";
+  document.getElementById("gradientResult").innerHTML = newText;  
   
   let copyText = document.getElementById("gradientResult");
   navigator.clipboard.writeText(newText);
