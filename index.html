@@ -33,7 +33,7 @@
 <p><canvas id="previewBox1" width="24" height="24"></canvas>
 <canvas id="previewBox2" width="24" height="24"></canvas></p>
 
-<p>Name Code:</p>
+<p>Text Code:</p>
 <p id="gradientResult"></p>
 <p id="message"></p>
 
@@ -50,7 +50,10 @@ function parseInput(){
   let hexcolor3 = document.getElementById("hexcolor3").value;
   
   if(String(hexcolor1).length<6){hexcolor1 = String(document.getElementById("hex1").value);}
-  if(inputtext==""||hexcolor1==""){return}
+  if(inputtext==""||hexcolor1==""){
+    document.getElementById("errorMessage").innerHTML="<i>PLEASE ENTER TEXT IN ORDER TO GENERATE A CODE!"; 
+    return;
+  }
   
   let sameColor = false;
   let using2 = document.getElementById("color2").checked;
@@ -213,7 +216,7 @@ function previewText(inputtext,hexcolor1,hexcolor2,hexcolor3,using3,sameColor){
   cx2.fillStyle = g2;
   cx2.fillText(backhalf,1,1);
   
-  document.getElementById("errorMessage").innerHTML="<i>*Please note, preview is may be slightly innacurate.</>";  
+  document.getElementById("errorMessage").innerHTML="<i>*Please note - due to limitations with HTML, preview may be slightly innacurate.</i>";  
   return;
 }
 </script>
