@@ -2,23 +2,26 @@
 <html>
 <body style="font-family:courier;">
 <p>Enter your <b>text</b> below, then choose up to <b>three</b> colors:</p>
-<form id="gradientInput" action="/action_page.php" oninput="hexcolor1.value=colorPicker1.value.substring(1,7);hexcolor2.value=colorPicker2.value.substring(1,7);hexcolor3.value=colorPicker3.value.substring(1,7)">
+<form id="gradientInput" action="/action_page.php" oninput="hex1.value=colorPicker1.value.substring(1,7);hex2.value=colorPicker2.value.substring(1,7);hex3.value=colorPicker3.value.substring(1,7)">
   <input type="text" id="inputtext" name="inputtext" maxlength="50" size="50"><br><br>
   
   <input type="checkbox" id="color1" name="color1" checked disabled>
   <label for="colorPicker1">Color 1:</label>
+  <input type="text" id="hexcolor1" name="hexcolor1"  maxlength="6" size="6">
   <input type="color" id="colorPicker1" name="colorPicker1" value="">
-  <output id="hexcolor1" for="colorPicker1"></output><br>
+  <output id="hex1" for="colorPicker1"></output><br>
   
   <input type="checkbox" id="color2" name="color2" onclick="hideColor2()">
   <label for="colorPicker2">Color 2:</label>
+  <input type="text" id="hexcolor2" name="hexcolor2"  maxlength="6" size="6"  style="visibility:hidden;">
   <input type="color" id="colorPicker2" name="colorPicker2" value="" style="visibility:hidden" disabled>
-  <output id="hexcolor2" for="colorPicker2" style="visibility:hidden;"></output><br>
+  <output id="hex2" for="colorPicker2" style="visibility:hidden;"></output><br>
   
   <input type="checkbox" id="color3" name="color3" onclick="hideColor3()" disabled>
   <label for="colorPicker1">Color 3:</label>
+  <input type="text" id="hexcolor3" name="hexcolor3"  maxlength="6" size="6" style="visibility:hidden;">
   <input type="color" id="colorPicker3" name="colorPicker3" value="" style="visibility:hidden" disabled>
-  <output id="hexcolor3" for="colorPicker3" style="visibility:hidden;"></output><br>
+  <output id="hex3" for="colorPicker3" style="visibility:hidden;"></output><br>
 </form><br>
 
 <button style="font-family:courier;" onclick="parseInput()">Get Code</button><br><br>
@@ -38,14 +41,18 @@ function parseInput(){
   let gradientInput = document.getElementById("gradientInput");
   
   const inputtext = document.getElementById("inputtext").value;
-  const hexcolor1 = document.getElementById("hexcolor1").value;
-  const hexcolor2 = document.getElementById("hexcolor2").value;
-  const hexcolor3 = document.getElementById("hexcolor3").value; 
+  let hexcolor1 = document.getElementById("hexcolor1").value;
+  let hexcolor2 = document.getElementById("hexcolor2").value;
+  let hexcolor3 = document.getElementById("hexcolor3").value;
+  
+  if(String(hexcolor1).length<6){hexcolor1 = String(document.getElementById("hex1").value);}
   if(inputtext==""||hexcolor1==""){return}
   
+  let sameColor = false;
   let using2 = document.getElementById("color2").checked;
   let using3 = document.getElementById("color3").checked;
-  let sameColor = false;
+  if(using2&&String(hexcolor2).length<6){hexcolor2 = String(document.getElementById("hex2").value);}
+  if(using3&&String(hexcolor3).length<6){hexcolor3 = String(document.getElementById("hex3").value);}
   if (hexcolor1==hexcolor2||hexcolor2==hexcolor3){sameColor=true;}
   
   let newText = ""
@@ -129,17 +136,20 @@ function getGradient3(inputtext,hexcolor1,hexcolor2,hexcolor3){
 function hideColor2() {
   let checkBox = document.getElementById("color2");
   let colorPicker = document.getElementById("colorPicker2");
-  let hexDisplay = document.getElementById("hexcolor2");
+  let hexInput = document.getElementById("hexcolor2");
+  let hexDisplay = document.getElementById("hex2");
   
   if (checkBox.checked == true){
     colorPicker.disabled = false;
     colorPicker.style.visibility = "visible";
     hexDisplay.style.visibility = "visible";
+    hexInput.style.visibility = "visible";
     document.getElementById("color3").disabled=false;
   } else {
     colorPicker.disabled = true;
     colorPicker.style.visibility = "hidden";
     hexDisplay.style.visibility = "hidden";
+    hexInput.style.visibility = "hidden";
     document.getElementById("color3").disabled=true;
     document.getElementById("color3").checked=false;
     hideColor3();
@@ -150,16 +160,19 @@ function hideColor2() {
 function hideColor3() {
   let checkBox = document.getElementById("color3");
   let colorPicker = document.getElementById("colorPicker3");
-  let hexDisplay = document.getElementById("hexcolor3");
+  let hexInput = document.getElementById("hexcolor3");
+  let hexDisplay = document.getElementById("hex3");
   
   if (checkBox.checked == true){
     colorPicker.disabled = false;
     colorPicker.style.visibility = "visible";
     hexDisplay.style.visibility = "visible";
+    hexInput.style.visibility = "visible";
   } else {
     colorPicker.disabled = true;
     colorPicker.style.visibility = "hidden";
     hexDisplay.style.visibility = "hidden";
+    hexInput.style.visibility = "hidden";
   }
   return;
 }
@@ -196,7 +209,7 @@ function previewText(inputtext,hexcolor1,hexcolor2,hexcolor3,using3,sameColor){
   cx2.fillStyle = g2;
   cx2.fillText(backhalf,1,1);
   
-  document.getElementById("errorMessage").innerHTML="<i>Please note, preview is may be slightly innacurate.</>";  
+  document.getElementById("errorMessage").innerHTML="<i>*Please note, preview is may be slightly innacurate.</>";  
   return;
 }
 </script>
