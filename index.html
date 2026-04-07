@@ -78,8 +78,8 @@ function parseInput(){
   
   let newText = ""
   if(using2 && using3 && !sameColor){newText=getGradient3(inputtext,hexcolor1,hexcolor2,hexcolor3);split=true;}
-  else if(using2 && !sameColor){newText=getGradient2(inputtext,hexcolor1,hexcolor2,250);}
-  else if(using3 && !sameColor){newText=getGradient2(inputtext,hexcolor1,hexcolor3,250);}
+  else if(using2 && !sameColor){newText=getGradient2(inputtext,hexcolor1,hexcolor2,200);}
+  else if(using3 && !sameColor){newText=getGradient2(inputtext,hexcolor1,hexcolor3,200);}
   else {newText=getGradient1(inputtext,hexcolor1);}
   newText+="|r";
   document.getElementById("gradientResult").innerHTML = newText;  
@@ -151,7 +151,7 @@ function getGradient3(inputtext,hexcolor1,hexcolor2,hexcolor3){
   let halfLength = Math.floor(totalLength/2);
   let text1 = inputtext.substring(0,halfLength);
   let text2 = inputtext.substring(halfLength,totalLength);
-  let newText = getGradient2(text1,hexcolor1,hexcolor2,125)+getGradient2(text2,hexcolor2,hexcolor3,125);
+  let newText = getGradient2(text1,hexcolor1,hexcolor2,100)+getGradient2(text2,hexcolor2,hexcolor3,100);
   return newText;
 }
 
