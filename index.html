@@ -68,6 +68,7 @@ function parseInput(){
     return;
   }
   
+  let split = false;
   let sameColor = false;
   let using2 = document.getElementById("color2").checked;
   let using3 = document.getElementById("color3").checked;
@@ -76,7 +77,7 @@ function parseInput(){
   if (hexcolor1==hexcolor2||hexcolor2==hexcolor3){sameColor=true;}
   
   let newText = ""
-  if(using2 && using3 && !sameColor){newText=getGradient3(inputtext,hexcolor1,hexcolor2,hexcolor3);}
+  if(using2 && using3 && !sameColor){newText=getGradient3(inputtext,hexcolor1,hexcolor2,hexcolor3);split=true;}
   else if(using2 && !sameColor){newText=getGradient2(inputtext,hexcolor1,hexcolor2,250);}
   else if(using3 && !sameColor){newText=getGradient2(inputtext,hexcolor1,hexcolor3,250);}
   else {newText=getGradient1(inputtext,hexcolor1);}
@@ -88,7 +89,7 @@ function parseInput(){
   
   document.getElementById("message").innerHTML = "<b>This code has been COPIED to the clipboard!</b>";
   
-  previewText(inputtext,hexcolor1,hexcolor2,hexcolor3,using3,sameColor)
+  previewText(inputtext,hexcolor1,hexcolor2,hexcolor3,split)
 }
 
 function hexToRGB(hex){
@@ -114,7 +115,7 @@ function getGradient2(inputtext,hexcolor1,hexcolor2,maxCharacters){
   let colorLength = 10;
   let textLength = String(inputtext).length | 0;
   let colorCount = Math.min(textLength,Math.floor((maxCharacters-textLength)/colorLength));
-  let perColor = Math.floor(textLength/colorCount);
+  let perColor = Math.ceil(textLength/colorCount);
   
   const startRGB = hexToRGB(hexcolor1);
   const endRGB = hexToRGB(hexcolor2);
@@ -131,11 +132,12 @@ function getGradient2(inputtext,hexcolor1,hexcolor2,maxCharacters){
   
   let c = 0;
   let g = 0;
+  let r = 0;
   let newText = "";
   for (let i=0;i<textLength;i++){
   	c+=1;
-  	if (c==perColor){c=0}	
-  	if (c==0){
+  	if (c==perColor||g==0){c=0}	
+  	if (c==0&&g<colorCount){
       newText+= o+gradient[g];
       g+=1;
   	}
@@ -197,39 +199,43 @@ function hideColor3() {
   return;
 }
 
-function previewText(inputtext,hexcolor1,hexcolor2,hexcolor3,using3,sameColor){
+function previewText(inputtext,hexcolor1,hexcolor2,hexcolor3,split){
+  let backhalf = "";
+  let totalLength = String(inputtext).length | 0;
+  let halfLength = Math.floor(totalLength/2);
+  
   let pb1 = document.getElementById("previewBox1");
   let cx1 = pb1.getContext("2d");
-  let g1 = cx1.createLinearGradient(0,0,280,0);
-  g1.addColorStop(0,"#"+hexcolor1);
-  if(hexcolor2!=""){g1.addColorStop(1,"#"+hexcolor2);}
   
-    let backhalf = ""; 
-    let pb2 = document.getElementById("previewBox2");
-    let cx2 = pb2.getContext("2d");
-    let g2 = cx2.createLinearGradient(0,0,280,0);
-  if(using3 && !sameColor){
-    let totalLength = String(inputtext).length | 0;
-    let halfLength = Math.floor(totalLength/2);
-    backhalf = inputtext.substring(halfLength,totalLength);
-    inputtext = inputtext.substring(0,halfLength);
-    
-  	g2.addColorStop(0,"#"+hexcolor2);
-    g2.addColorStop(1,"#"+hexcolor3);
+  let pb2 = document.getElementById("previewBox2");
+  let cx2 = pb2.getContext("2d");
+  
+  if (split){
+	backhalf = inputtext.substring(halfLength,totalLength);  
+    inputtext = inputtext.substring(0,halfLength); 
   }
+  
+  let g1 = cx1.createLinearGradient(0,0,String(inputtext).length*15,0);
+  g1.addColorStop(0,"#"+hexcolor1);
+  if (hexcolor2!=""){g1.addColorStop(1,"#"+hexcolor2);}  
+  
+  let g2 = cx2.createLinearGradient(0,0,String(backhalf).length*15,0);
+  if (split){g2.addColorStop(0,"#"+hexcolor2);g2.addColorStop(1,"#"+hexcolor3);}
+  
+  
   document.getElementById("previewBox1").width=String(inputtext).length*15;
   cx1.font = "bold 24px Courier";
-  cx1.fillStyle = g1;
   cx1.textBaseline = "top";
+  cx1.fillStyle = g1;
   cx1.fillText(inputtext,0,0);
   
   document.getElementById("previewBox2").width=String(backhalf).length*15;
   cx2.font = "bold 24px Courier";
   cx2.textBaseline = "top";
   cx2.fillStyle = g2;
-  cx2.fillText(backhalf,0,0);
+  cx2.fillText(backhalf,0,0);  
   
-  document.getElementById("errorMessage").innerHTML="<i>*Please note - due to limitations with HTML, preview may be slightly innacurate.</i>";  
+  document.getElementById("errorMessage").innerHTML="<i>*Please note - due to limitations of mortals, preview may be slightly innacurate.</i>"
   return;
 }
 </script>
