@@ -111,37 +111,34 @@ function getGradient1(inputtext,hexcolor1){
 }
 
 function getGradient2(inputtext,hexcolor1,hexcolor2,maxCharacters){
-  let o = "|cff";
+  let remainingLength = String(inputtext).length | 0;  
+  let startRGB = hexToRGB(hexcolor1);
+  let endRGB = hexToRGB(hexcolor2);
+  
+  let colorCount = 0;
   let colorLength = 10;
-  let textLength = String(inputtext).length | 0;
-  let colorCount = Math.min(textLength,Math.floor((maxCharacters-textLength)/colorLength));
-  let perColor = Math.ceil(textLength/colorCount);
-  
-  const startRGB = hexToRGB(hexcolor1);
-  const endRGB = hexToRGB(hexcolor2);
-  
-  const rgbDifference = []
-  for (let i=0;i<3;i++){rgbDifference[i] = Math.floor((Number(startRGB[i])-Number(endRGB[i]))/colorCount);}
-  const gradient = [rgbToHex(startRGB[0],startRGB[1],startRGB[2])];
-  let currentRGB = startRGB;
-  for (let n=1;n<colorCount-1;n++) {
-  	for (let i=0;i<3;i++) {currentRGB[i]-=rgbDifference[i];}
-  	gradient[n] = rgbToHex(currentRGB[0],currentRGB[1],currentRGB[2]);
+  let testLength = remainingLength;
+  for (let n=0;testLength>0;n++){
+    let remaining = (maxCharacters-(colorLength*(n+1)))-testLength
+    let t = Math.ceil(testLength/(Math.floor(remaining/colorLength)))
+    testLength-=t;
+    colorCount=n;
   }
-  gradient[colorCount-1] = rgbToHex(endRGB[0],endRGB[1],endRGB[2]);
+
+  let nt=0;
+  let newText="";
+  let rgbDifference = [];
+  let currentRGB = startRGB;  
+  for (let n=0;remainingLength>0;n++){
+    let hexcolor = [rgbToHex(currentRGB[0],currentRGB[1],currentRGB[2])];
+    let remaining = (maxCharacters-(colorLength*(n+1)))-remainingLength
+    let t = Math.ceil(remainingLength/(Math.floor(remaining/colorLength)))
+    newText+="|cff"+hexcolor+inputtext.substring(nt,nt+t)
+    remainingLength-=t;
+    nt+=t;
   
-  let c = 0;
-  let g = 0;
-  let r = 0;
-  let newText = "";
-  for (let i=0;i<textLength;i++){
-  	c+=1;
-  	if (c==perColor||g==0){c=0}	
-  	if (c==0&&g<colorCount){
-      newText+= o+gradient[g];
-      g+=1;
-  	}
-  	newText+= inputtext.substring(i,i+1);
+    for (let i=0;i<3;i++) {rgbDifference[i] = Math.round((Number(currentRGB[i])-Number(endRGB[i]))/(colorCount-n));}
+    for (let i=0;i<3;i++) {currentRGB[i]-=rgbDifference[i];}
   }
   return newText;
 }
